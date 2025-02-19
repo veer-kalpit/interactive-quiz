@@ -1,7 +1,3 @@
-It looks like you want a more **human-written** README, less AI-generated. Here's a refined version with a more natural tone:  
-
----
-
 # **Interactive Quiz Platform**  
 
 ## 🚀 About This Project  
@@ -21,7 +17,7 @@ Users start with Level 1 and **automatically move to Level 2** before seeing the
 ├── 📂 app
 │   ├── 📂 components
 │   │   ├── Quiz.tsx        # The main quiz logic
-│   │   ├── QuizHistory.tsx     # Displays past quiz attempts
+│   │   ├── QuizHistory.tsx # Displays past quiz attempts
 │   ├── 📂 utils
 │   │   ├── quizStorage.ts  # IndexedDB helper functions
 │   ├── page.tsx            # Landing page
@@ -41,7 +37,7 @@ Users start with Level 1 and **automatically move to Level 2** before seeing the
 ## 🛠️ Tech Stack  
 
 - **Frontend:** Next.js (TypeScript), TailwindCSS  
-- **State Management:** React Hooks (`useState`, `useEffect`)  
+- **State Management:** React Hooks (`useState`, `useEffect`, `useCallback`)  
 - **Database:** IndexedDB (for storing quiz history)  
 
 ---
@@ -99,12 +95,10 @@ This lets users track progress over time!
 
 ---
 
-## 📜 License  
-
-This project is open-source under the **MIT License**.  
-
----
-
-### 🚀 Have fun quizzing! 🎉  
+## 🌐 Live Demo  
+Check out the live version here: [Interactive Quiz Platform](https://interactive-quiz-dacoid-digital-assignment.vercel.app/)  
 
 ---
+
+### 🚀 Have fun quizzing! 🎉
+
