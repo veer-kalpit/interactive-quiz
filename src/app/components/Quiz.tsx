@@ -6,8 +6,8 @@ import { saveQuizAttempt } from "../utils/quizStorage";
 interface Question {
   id: number;
   question: string;
-  options?: string[]; // MCQs will have options
-  answer: string | number; // Answer can be text (MCQ) or number (Integer-type)
+  options?: string[]; 
+  answer: string | number;
 }
 
 const level1Questions: Question[] = [
