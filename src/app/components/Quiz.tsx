@@ -84,23 +84,48 @@ export default function Quiz() {
   const [score, setScore] = useState<number>(0);
   const [timer, setTimer] = useState<number>(30);
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [answerStatus, setAnswerStatus] = useState<Record<number, string>>({});
 
   const questions = level === 1 ? level1Questions : level2Questions;
 
   const handleNextQuestion = useCallback(() => {
     let updatedScore = score;
-
-    if (
+    const isCorrect =
       selectedAnswer !== null &&
-      selectedAnswer === questions[currentQuestion].answer
-    ) {
+      selectedAnswer === questions[currentQuestion].answer;
+    setAnswerStatus((prev) => ({
+      ...prev,
+      [currentQuestion]: isCorrect ? "correct" : "incorrect",
+    }));
+
+    if (isCorrect) {
       updatedScore += 1;
       setScore(updatedScore);
     }
 
+    setTimeout(() => {
+      setSelectedAnswer(null);
+      setTimer(30);
+
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(currentQuestion + 1);
+      } else {
+        if (level === 1) {
+          setLevel(2);
+          setCurrentQuestion(0);
+          setTimer(30);
+          setAnswerStatus({}); // Reset tile colors for level 2
+        } else {
+          handleSubmit(updatedScore);
+        }
+      }
+    }, 1000);
+  }, [currentQuestion, level, questions, score, selectedAnswer]);
+
+  const handleSkipQuestion = () => {
+    setAnswerStatus((prev) => ({ ...prev, [currentQuestion]: "skipped" }));
     setSelectedAnswer(null);
     setTimer(30);
-
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
@@ -108,11 +133,12 @@ export default function Quiz() {
         setLevel(2);
         setCurrentQuestion(0);
         setTimer(30);
+        setAnswerStatus({});
       } else {
-        handleSubmit(updatedScore);
+        handleSubmit(score);
       }
     }
-  }, [currentQuestion, level, questions, score, selectedAnswer]);
+  };
 
   useEffect(() => {
     if (timer > 0) {
@@ -140,7 +166,29 @@ export default function Quiz() {
     <div className="p-4 border rounded shadow-md bg-white">
       {!submitted ? (
         <>
-          <h2 className="text-xl font-bold">Quiz - Level {level}</h2>
+          <div className="flex justify-evenly mb-2">
+            {[...Array(5)].map((_, index) => (
+
+              <div
+                key={index}
+                className={`w-6 h-6 flex items-center flex-row justify-evenly text-white text-sm font-bold rounded-sm 
+                  ${
+                    index === currentQuestion
+                      ? "bg-blue-500"
+                      : answerStatus[index] === "correct"
+                      ? "bg-green-500"
+                      : answerStatus[index] === "incorrect"
+                      ? "bg-red-500"
+                      : index >= 5 && level === 2
+                      ? "bg-white border border-gray-400"
+                      : "bg-gray-300"
+                  }`}
+              >
+                {index + 1}
+              </div>
+            ))}
+          </div>
+          <h2 className="text-xl font-bold mt-2">Quiz - Level {level}</h2>
           <p className="text-gray-700">Time Left: {timer}s</p>
           <p className="mt-2 font-semibold">
             {questions[currentQuestion].question}
@@ -150,13 +198,15 @@ export default function Quiz() {
             <div className="mt-2">
               {questions[currentQuestion].options?.map((option) => (
                 <button
+                  type="button"
                   key={option}
                   onClick={() => handleAnswerSelection(option)}
-                  className={`block w-full p-2 mt-2 border rounded ${
-                    selectedAnswer === option
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-100"
-                  }`}
+                  className={`block w-full p-2 mt-2 border rounded 
+                    ${
+                      selectedAnswer === option
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-100"
+                    }`}
                 >
                   {option}
                 </button>
@@ -172,12 +222,61 @@ export default function Quiz() {
             />
           )}
 
-          <button
-            onClick={handleNextQuestion}
-            className="px-4 py-2 bg-green-500 text-white rounded mt-4"
-          >
-            Next
-          </button>
+          <div className="flex justify-between mt-5">
+            <button
+              type="button"
+              onClick={handleSkipQuestion}
+              className="group relative inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-red-500 font-medium text-neutral-200 border-2 border-red-300 transition-all duration-300 hover:w-32"
+            >
+              <div className="inline-flex whitespace-nowrap opacity-0 transition-all duration-200 group-hover:-translate-x-3 group-hover:opacity-100 text-white">
+                Skip
+              </div>
+              <div className="absolute right-3.5">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 15 15"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                >
+                  <path
+                    d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z"
+                    fill="white"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleNextQuestion}
+              className="group relative inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-green-500 font-medium text-neutral-200 border-2 border-green-300 transition-all duration-300 hover:w-32"
+            >
+              <div className="inline-flex whitespace-nowrap opacity-0 transition-all duration-200 group-hover:-translate-x-3 group-hover:opacity-100 text-white">
+                Next
+              </div>
+              <div className="absolute right-3.5">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 15 15"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                >
+                  <path
+                    d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z"
+                    fill="white"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+            </button>
+          </div>
         </>
       ) : (
         <p className="text-green-500 font-bold mt-4">
