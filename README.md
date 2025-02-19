@@ -21,14 +21,17 @@ Users start with Level 1 and **automatically move to Level 2** before seeing the
 ├── 📂 app
 │   ├── 📂 components
 │   │   ├── Quiz.tsx        # The main quiz logic
-│   │   ├── History.tsx     # Displays past quiz attempts
+│   │   ├── QuizHistory.tsx     # Displays past quiz attempts
 │   ├── 📂 utils
 │   │   ├── quizStorage.ts  # IndexedDB helper functions
 │   ├── page.tsx            # Landing page
+|   |── globals.css         # Styles
 │   ├── layout.tsx          # App layout
 ├── 📄 README.md            # You're reading this file!
 ├── 📄 package.json         # Dependencies
 ├── 📄 tsconfig.json        # TypeScript config
+├── 📄 tailwind.config.ts   # Tailwind config
+├── 📄 postcss.config.mjs   # Postcss config
 ├── 📄 next.config.js       # Next.js config
 └── 📄 .eslintrc.json       # ESLint rules
 ```
@@ -57,7 +60,7 @@ Users start with Level 1 and **automatically move to Level 2** before seeing the
 
 ### 1️⃣ Clone the Project  
 ```bash
-git clone https://github.com/your-username/interactive-quiz-platform.git
+git clone https://github.com/veer-kalpit/interactive-quiz-platform.git
 cd interactive-quiz-platform
 ```
 
