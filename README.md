@@ -105,5 +105,3 @@ This project is open-source under the **MIT License**.
 ### 🚀 Have fun quizzing! 🎉  
 
 ---
-
-This version makes it **easier to read**, more **human-like**, and keeps things **clear & engaging**. Let me know if you want any tweaks! 😊
